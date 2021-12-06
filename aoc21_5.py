@@ -1,4 +1,3 @@
-from pprint import pprint as print
 grid = [[0 for i in range(1000)] for j in range(1000)]
 
 with open('aoc21_5_input.txt') as f:    
