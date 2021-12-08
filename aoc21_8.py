@@ -1,4 +1,5 @@
 easy_counts = [0] * 10
+output_sum = 0
 
 with open('aoc21_8_input.txt') as f:
     for line in f:
@@ -110,7 +111,26 @@ with open('aoc21_8_input.txt') as f:
                 top_left_vertical = c
                 break
 
-        # all characters identified
+        # all slots identified
+        
+        # now decode the output
+        for item in output:
+            decoded = ''
+            # can still use the easy identifications to save some decoding
+            length = len(item)
+            match length:
+                case 2:
+                    decoded += '1'
+                case 4:
+                    decoded += '4'
+                case 3:
+                    decoded += '7'
+                case 7:
+                    decoded += '8'
+                case 5: # can only be 2, 3, or 5
+                    pass
+                case 6: # can only be 6, 9, or 0
+                    pass
 
 
 
