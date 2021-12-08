@@ -74,6 +74,44 @@ with open('aoc21_8_input.txt') as f:
                 bottom_left_vertical = c
                 break
 
+        # three slots positively identified, four to go
+
+        # find the 6 (all known slots plus middle_L) to get bottom_right_vertical
+        for item in key:
+            if len(item) == 6:
+                unmatched = []
+                for c in item:
+                    if c not in middle_L and c != top_horizonal and c != bottom_horizontal and c != bottom_left_vertical:
+                        unmatched.append(c)
+                if len(unmatched) == 1:
+                    bottom_right_vertical = c
+                    break
+
+        # get top_right_vertical
+        for c in right_vertical:
+            if c != bottom_right_vertical:
+                top_right_vertical = c
+                break
+
+        # 6 and 0 are still ambiguous because of middle_L, but we know enough about 2 to find middle_horizontal
+        for item in key:
+            if len(item) == 5:
+                unmatched = []
+                for c in item:
+                    if c != top_horizonal and c != bottom_horizontal and c != bottom_left_vertical and c != top_right_vertical:
+                        unmatched.append(c)
+                if len(unmatched) == 1:
+                    middle_horizontal = c
+                    break
+        
+        # get top_left_vertical
+        for c in middle_L:
+            if c != middle_horizontal:
+                top_left_vertical = c
+                break
+
+        # all characters identified
+
 
 
 
