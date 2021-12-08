@@ -79,25 +79,12 @@ with open('aoc21_8_input.txt') as f:
 
         # find the 6 (all known slots plus middle_L) to get bottom_right_vertical
         for item in key:
-            print('looking for 6')
             if len(item) == 6: # narrowed down to 6, 9, or 0
-                print(item)
                 unmatched = []
                 for c in item:
-                    print(f'testing: {c}')
-                    print(f'right vert = {right_vertical}')
-                    print(f'midlle L = {middle_L}')
-                    print(f'top horiz = {top_horizonal}')
-                    print(f'bot horiz = {bottom_horizontal}')
-                    print(f'bot lef = {bottom_left_vertical}')
                     if c in right_vertical and c not in middle_L and c != top_horizonal and c != bottom_horizontal and c != bottom_left_vertical:
                         unmatched.append(c)
-                print(f'unmatched = {unmatched}')
-                print(f'umatch len = {len(unmatched)}')
-                print(f'right vert = {right_vertical}')
-                print(c in right_vertical)
                 if len(unmatched) == 1:
-                    print('hello')
                     bottom_right_vertical = unmatched[0]
                     break
 
@@ -125,15 +112,6 @@ with open('aoc21_8_input.txt') as f:
                 break
 
         # all slots identified
-        print(right_vertical)
-        print(top_horizonal)
-        print(middle_L)
-        print(bottom_horizontal)
-        print(bottom_left_vertical)
-        print(bottom_right_vertical)
-        print(top_right_vertical)
-        print(middle_horizontal)
-        print(top_left_vertical)
 
         # now decode the output
         decoded = ''
@@ -164,41 +142,7 @@ with open('aoc21_8_input.txt') as f:
                     else:
                         decoded += '6'
 
-        # decode the key to check...
-        decoded_key = ''
-        for item in key:
-            # can still use the easy identifications to save some decoding
-            length = len(item)
-            match length:
-                case 2:
-                    decoded_key += '1'
-                case 4:
-                    decoded_key += '4'
-                case 3:
-                    decoded_key += '7'
-                case 7:
-                    decoded_key += '8'
-                case 5: # can only be 2, 3, or 5
-                    if bottom_left_vertical in item:
-                        decoded_key += '2'
-                    elif top_left_vertical in item:
-                        decoded_key += '5'
-                    else:
-                        decoded_key += '3'
-                case 6: # can only be 6, 9, or 0
-                    if middle_horizontal not in item:
-                        decoded_key += '0'
-                    elif bottom_left_vertical not in item:
-                        decoded_key += '9'
-                    else:
-                        decoded_key += '6'
-
-        print(f'Key: {key}')
-        print(f'Decoded key: {decoded_key}')
-        print(f'Output: {output}')
-        print(f'Decoded: {decoded}')
         output_sum += int(decoded)
-        print(f'Running total: {output_sum}')
 
 
 
