@@ -1,69 +1,59 @@
-""" fold along x=655
-fold along y=447
-fold along x=327
-fold along y=223
-fold along x=163
-fold along y=111
-fold along x=81
-fold along y=55
-fold along x=40
-fold along y=27
-fold along y=13
-fold along y=6 """
+folds = []
+with open('aoc21_13_folds.txt') as f:
+    for line in f:
+        axis,number = line.strip().split('=')
+        folds.append({'axis':axis, 'line':int(number)})
 
-raw_input = []
+coordinates = []
+with open('aoc21_13_input.txt') as f:
+    for line in f:
+        x,y = line.strip().split(',')
+        coordinates.append({'x':int(x),'y':int(y)})
+
+for fold in folds:
+    temp_coordinates = []
+
+    for coordinate in coordinates:
+        if coordinate[fold['axis']] < fold['line']:
+            temp_coordinates.append(coordinate)
+        if coordinate[fold['axis']] > fold['line']:
+            new_coordinate = coordinate
+            new_coordinate[fold['axis']] = fold['line'] * 2 - coordinate[fold['axis']]
+            temp_coordinates.append(new_coordinate)
+
+    coordinates = temp_coordinates
+    # break # for part one answering dots after first fold
+
+# figure out what's unique
+coordinate_strings = []
+for coordinate in coordinates:
+    string = f'{coordinate["x"]},{coordinate["y"]}'
+    if string not in coordinate_strings:
+        coordinate_strings.append(string)
+
+# print(len(coordinate_strings))
+
+# figure out how big final input is
 max_x = -1
 max_y = -1
 
-with open('aoc21_13_input.txt') as f:
-    for line in f:
-        raw_input.append(line)
-        x,y = line.split(',')
-        if int(x) > max_x:
-            max_x = int(x)
-        if int(y) > max_y:
-            max_y = int(y)
+for string in coordinate_strings:
+    x,y = string.split(',')
+    if int(x) > max_x:
+        max_x = int(x)
+    if int(y) > max_y:
+        max_y = int(y)
 
+# make the final grid
 grid = []
 
-for y in range(max_y):
-    row = ['.'] * max_x
+for y in range(max_y + 1):
+    row = [' '] * (max_x + 1)
     grid.append(row)
 
-for item in raw_input:
-    x,y = item.split(',')
-    grid[int(y)-1][int(x)-1] = '#'
+for string in coordinate_strings:
+    x,y = string.split(',')
+    grid[int(y)][int(x)] = '#'
 
-def fold(grid, axis, line):
-    current_height = len(grid)
-    current_width = len(grid[0])
-
-    if axis == 'x':
-        new_grid = []
-        for i in range(current_height):
-            row = grid[i][0:line-1]
-            new_grid.append(row)
-
-        for y in range(current_height):
-            for x in range(line, current_width):
-                print(f'{x},{y}')
-                if grid[y][x] == '#':
-                    new_grid[y][current_width - x] = '#'
-                    
-    elif axis == 'y':
-        new_grid = grid[0:line-1]
-        for y in range(line, current_height):
-            for x in range(current_width):
-                if grid[y][x] == '#':
-                    new_grid[current_height - y][x] = '#'
-
-fold(grid, 'x', 655)
-
-count = 0
-
-for y in range(len(grid)):
-    for x in range(len(grid[0])):
-        if grid[y][x] == '#':
-            count += 1
-
-print(count)
+for row in grid:
+    print(''.join(row))
