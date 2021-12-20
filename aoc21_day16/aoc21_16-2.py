@@ -1,3 +1,5 @@
+import math
+
 with open('aoc21_16_input.txt') as f:
     raw_hex_code = f.read()
 
@@ -47,6 +49,8 @@ def process_packet(source_list):
         length_type_id = get_characters(source_list, 1)
         print(f'length type: {length_type_id}')
 
+        packets = []
+
         if length_type_id == '0':
             total_length = int(get_characters(source_list, 15),2)
             print(f'total length: {total_length}')
@@ -60,23 +64,36 @@ def process_packet(source_list):
                 packet = process_packet(sub_list)
                 print(f'packet: {packet}')
                 packets.append(packet)
-
-            print(f'packets: {packets}')
-            return packets
         
         elif length_type_id == '1':
             sub_packet_number = int(get_characters(source_list, 11),2)
             print(f'sub packets: {sub_packet_number}')
-
-            packets = []
             
             for i in range(sub_packet_number):
                 packet = process_packet(source_list)
                 print(f'packet: {packet}')
                 packets.append(packet)
 
-            print(f'packets: {packets}')
-            return packets
+        print(f'packets: {packets}')
+
+        match type_id:
+            case 0:
+                packets = sum(packets)
+            case 1:
+                packets = math.prod(packets)
+            case 2:
+                packets = min(packets)
+            case 3:
+                packets = max(packets)
+            case 5:
+                packets = 1 if packets[0] > packets[1] else 0
+            case 6:
+                packets = 1 if packets[0] < packets[1] else 0
+            case 7:
+                packets = 1 if packets[0] == packets[1] else 0
+
+        print(f'processed packets: {packets}')
+        return packets
 
 raw_binary = list(hex_to_bin(raw_hex_code))
 
