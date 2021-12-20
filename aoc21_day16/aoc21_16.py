@@ -65,7 +65,7 @@ def process_packet(source_list):
     if type_id == 4:
         return read_literal_packet(source_list)
 
-    if type_id == 6:
+    if type_id != 4:
         length_type_id = get_characters(raw_binary, 1)
         print(f'length type: {length_type_id}')
 
@@ -88,6 +88,18 @@ def process_packet(source_list):
         
         elif length_type_id == '1':
             sub_packet_number = int(get_characters(raw_binary, 11),2)
+            print(f'sub packets: {sub_packet_number}')
+
+            packets = []
+            
+            for i in range(sub_packet_number):
+                packet = process_packet(source_list)
+                print(f'packet: {packet}')
+                packets.append(packet)
+
+            print(f'packets: {packets}')
+            return packets
+
 
 raw_binary = list(hex_to_binary(raw_hex_code))
 
