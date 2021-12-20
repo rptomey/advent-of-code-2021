@@ -66,57 +66,31 @@ def process_packet(source_list):
         return read_literal_packet(source_list)
 
     if type_id == 6:
-        total_length = int(get_characters(source_list, 15),2)
-        print(f'total length: {total_length}')
-
-        sub_list = get_characters(source_list, total_length)
-
-
-
-
-
-
-raw_binary = list(hex_to_binary(raw_hex_code))
-
-decoded_packets = []
-
-while raw_binary:
-    version = int(get_characters(raw_binary, 3), 2)
-    print(f'version: {version}')
-
-    type_id = int(get_characters(raw_binary, 3),2)
-    print(f'type: {type_id}')
-
-    if type_id == 4:
-        decimal_value = read_literal_packet(raw_binary)
-
-    if type_id == 6:
         length_type_id = get_characters(raw_binary, 1)
         print(f'length type: {length_type_id}')
-        
+
         if length_type_id == '0':
-            total_length = int(get_characters(raw_binary, 15),2)
+            total_length = int(get_characters(source_list, 15),2)
             print(f'total length: {total_length}')
-            packets = list(get_characters(raw_binary, total_length))
-            binary_value = ''
-            print(f'binary value: {binary_value}')
-            while packets[0] == '1':
-                chunk = get_characters(packets, 5)
-                print(f'chunk: {chunk}')
-                binary_value = binary_value + chunk[1:]
-                print(f'binary value: {binary_value}')
-            chunk = get_characters(packets, 5)
-            print(f'chunk: {chunk}')
-            binary_value = binary_value + chunk[1:]
-            print(f'binary value: {binary_value}')
 
-            decimal_value = int(binary_value, 2)
+            sub_list = list(get_characters(source_list, total_length))
+            print(f'sub list: {sub_list}')
 
+            packets = []
+
+            while sub_list:
+                packet = process_packet(sub_list)
+                print(f'packet: {packet}')
+                packets.append(packet)
+
+            print(f'packets: {packets}')
+            return packets
+        
         elif length_type_id == '1':
             sub_packet_number = int(get_characters(raw_binary, 11),2)
 
+raw_binary = list(hex_to_binary(raw_hex_code))
 
-    if len(raw_binary) < 6:
-        break
+decoded_packets = process_packet(raw_binary)
 
-print(decimal_value)
+print(decoded_packets)
