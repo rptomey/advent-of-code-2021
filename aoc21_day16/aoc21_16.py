@@ -1,44 +1,8 @@
-with open('aoc21_16_sample2.txt') as f:
+with open('aoc21_16_input.txt') as f:
     raw_hex_code = f.read()
 
-def hex_to_binary(string):
-    binary = ''
-    for c in string:
-        match c:
-            case '0':
-                binary_chunk = '0000'
-            case '1':
-                binary_chunk = '0001'
-            case '2':
-                binary_chunk = '0010'
-            case '3':
-                binary_chunk = '0011'
-            case '4':
-                binary_chunk = '0100'
-            case '5':
-                binary_chunk = '0101'
-            case '6':
-                binary_chunk = '0110'
-            case '7':
-                binary_chunk = '0111'
-            case '8':
-                binary_chunk = '1000'
-            case '9':
-                binary_chunk = '1001'
-            case 'A':
-                binary_chunk = '1010'
-            case 'B':
-                binary_chunk = '1011'
-            case 'C':
-                binary_chunk = '1100'
-            case 'D':
-                binary_chunk = '1101'
-            case 'E':
-                binary_chunk = '1110'
-            case 'F':
-                binary_chunk = '1111'
-        binary = binary + binary_chunk 
-    return binary
+def hex_to_bin(hex: str) -> str:
+    return "".join([format(int(h, 16), "b").zfill(4) for h in hex])
 
 def get_characters(source_list, number):
     characters = ''
@@ -56,8 +20,10 @@ def read_literal_packet(source_list):
     return int(binary_value, 2)
 
 def process_packet(source_list):
+    global version_sum
     version = int(get_characters(source_list, 3), 2)
     print(f'version: {version}')
+    version_sum += version
 
     type_id = int(get_characters(source_list, 3),2)
     print(f'type: {type_id}')
@@ -66,7 +32,7 @@ def process_packet(source_list):
         return read_literal_packet(source_list)
 
     if type_id != 4:
-        length_type_id = get_characters(raw_binary, 1)
+        length_type_id = get_characters(source_list, 1)
         print(f'length type: {length_type_id}')
 
         if length_type_id == '0':
@@ -87,7 +53,7 @@ def process_packet(source_list):
             return packets
         
         elif length_type_id == '1':
-            sub_packet_number = int(get_characters(raw_binary, 11),2)
+            sub_packet_number = int(get_characters(source_list, 11),2)
             print(f'sub packets: {sub_packet_number}')
 
             packets = []
@@ -100,9 +66,11 @@ def process_packet(source_list):
             print(f'packets: {packets}')
             return packets
 
+raw_binary = list(hex_to_bin(raw_hex_code))
 
-raw_binary = list(hex_to_binary(raw_hex_code))
+version_sum = 0
 
 decoded_packets = process_packet(raw_binary)
 
 print(decoded_packets)
+print(version_sum)
