@@ -19,7 +19,7 @@ with open('aoc21_20_input.txt') as f:
 
 images.append(original_image)
 
-def enhance(image, algorithm):
+def enhance(image, algorithm, count):
     new_image = {}
     # figure out the current image size
     min_x = 0
@@ -61,7 +61,10 @@ def enhance(image, algorithm):
                         elif image[f'{x},{y}'] == '#':
                             binary = binary + '1'
                     except KeyError:
-                        binary = binary + '0'
+                        if count % 2 == 0:
+                            binary = binary + '0'
+                        else:
+                            binary = binary + '1'
             #print(f'binary: {binary}')
         
             # convert the binary to an index
@@ -118,14 +121,15 @@ def print_image(image):
 
     print('')
 
-for i in range(2):
-    enhanced_image = enhance(images[-1], enhancement_algorithm)
+for i in range(50):
+    enhanced_image = enhance(images[-1], enhancement_algorithm, i)
     images.append(enhanced_image)
-    print_image(images[i+1])
+    #print_image(images[i+1])
 
 pixel_count = 0
 for value in images[-1].values():
     if value == '#':
         pixel_count += 1
 
+print_image(images[-1])
 print(pixel_count)
